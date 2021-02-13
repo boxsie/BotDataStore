@@ -25,10 +25,11 @@
         "DB_USER": "jeffbot",
         "DB_URL": "localhost",
         "DB_NAME": "discord",
+        "DB_PORT": "3306",
         "DB_PASS": "rlkwrymjgVe0aY6iqf",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+      "applicationUrl": "http://localhost:5000"
     }
   }
 }

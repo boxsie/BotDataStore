@@ -87,13 +87,11 @@ namespace BotData.Api.Controllers
             if (user == null)
                 return BadRequest("User does not exist");
 
-            if (!string.IsNullOrWhiteSpace(user.Name))
+            if (!string.IsNullOrWhiteSpace(model.Name))
                 user.Name = model.Name;
             
-            if (!string.IsNullOrWhiteSpace(user.EntranceSound))
+            if (!string.IsNullOrWhiteSpace(model.EntranceSound))
                 user.EntranceSound = model.EntranceSound;
-
-            _context.Users.Update(user);
 
             await _context.SaveChangesAsync();
 
