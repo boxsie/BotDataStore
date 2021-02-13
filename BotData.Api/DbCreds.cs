@@ -14,10 +14,8 @@ namespace BotData.Api
 
         public DbCreds()
         {
-            var full_url = Environment.GetEnvironmentVariable("DB_URL");
-            var urlPort = full_url.Split(':');
-            Url = urlPort[0];
-            Port = urlPort[1];
+            Url = Environment.GetEnvironmentVariable("DB_URL");
+            Port = Environment.GetEnvironmentVariable("DB_PORT");
             Username = Environment.GetEnvironmentVariable("DB_USER");
             Password = Environment.GetEnvironmentVariable("DB_PASS");
             Database = Environment.GetEnvironmentVariable("DB_NAME");
