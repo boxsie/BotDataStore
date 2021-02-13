@@ -9,5 +9,7 @@ namespace BotData.Data.Models
 
         [Required]
         public long DiscordId { get; set; }
+
+        public string EntranceSound { get; set; }
     }
 }

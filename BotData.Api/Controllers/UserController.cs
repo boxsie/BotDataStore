@@ -75,6 +75,30 @@ namespace BotData.Api.Controllers
 
             return Ok(user);
         }
+
+        [HttpPut]
+        [ValidateModel]
+        public async Task<ActionResult<User>> Put(UserModel model)
+        {
+            var user = await _context
+                .Users
+                .FirstOrDefaultAsync(x => x.DiscordId == model.DiscordId);
+
+            if (user == null)
+                return BadRequest("User does not exist");
+
+            if (!string.IsNullOrWhiteSpace(user.Name))
+                user.Name = model.Name;
+            
+            if (!string.IsNullOrWhiteSpace(user.EntranceSound))
+                user.EntranceSound = model.EntranceSound;
+
+            _context.Users.Update(user);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
+        }
     }
 
     public class ValidateModelAttribute : ActionFilterAttribute
