@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bot-data
+  name: bot-data-deployment
+  namespace: discord
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bot-data
+  template:
+    metadata:
+      labels:
+        app: bot-data
+    spec:
+      containers:
+      - env:
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              key: db-url
+              name: bot-data-db-url
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              key: db-name
+              name: bot-data-db-name
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              key: db-user
+              name: bot-data-db-user
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              key: db-pass
+              name: bot-data-db-pass
+        image: discord-bot/bot-data:latest
+        name: bot-data
+        ports:
+        - containerPort: 5001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: bot-data
+  name: bot-data-service
+  namespace: discord
+spec:
+  ports:
+  - port: 5001
+    targetPort: 5001
+  selector:
+    app: bot-data
