@@ -37,6 +37,11 @@ spec:
             secretKeyRef:
               key: db-pass
               name: bot-data-db-pass
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              key: db-port
+              name: bot-data-db-port
         image: discord-bot/bot-data:latest
         name: bot-data
         ports:

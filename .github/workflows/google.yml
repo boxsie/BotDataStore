@@ -64,6 +64,7 @@ jobs:
         ./kustomize edit add secret bot-data-db-name --from-literal=db-name=${{ secrets.DB_NAME }}
         ./kustomize edit add secret bot-data-db-user --from-literal=db-user=${{ secrets.DB_USER }}
         ./kustomize edit add secret bot-data-db-pass --from-literal=db-pass=${{ secrets.DB_PASS }}
+        ./kustomize edit add secret bot-data-db-port --from-literal=db-port=${{ secrets.DB_PORT }}
         ./kustomize edit set image discord-bot/bot-data=eu.gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status -n $NAMESPACE deployment/$DEPLOYMENT_NAME
