@@ -26,7 +26,7 @@ namespace BotData.Api
                 .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Information);
 
             services.AddControllers();
-            
+
             var dbCreds = DbCreds.GetCreds();
 
             services.AddDbContext<BotDataContext>(builder =>
@@ -53,11 +53,7 @@ namespace BotData.Api
                 await context.Response.WriteAsync(result);
             }));
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
