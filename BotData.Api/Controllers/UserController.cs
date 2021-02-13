@@ -32,7 +32,7 @@ namespace BotData.Api.Controllers
         }
 
         [HttpGet("{discordId:long}")]
-        public async Task<ActionResult<User>> GetById(int discordId)
+        public async Task<ActionResult<User>> GetById(long discordId)
         {
             var user = await _context
                 .Users
