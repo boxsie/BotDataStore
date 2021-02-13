@@ -36,7 +36,7 @@ namespace BotData.Api.Controllers
         {
             var user = await _context
                 .Users
-                .FirstOrDefaultAsync(x => x.DiscordId == projectId);
+                .FirstOrDefaultAsync(x => x.DiscordId == discordId);
 
             if (user == null)
                 return NotFound();
