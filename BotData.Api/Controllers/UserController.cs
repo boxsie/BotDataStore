@@ -32,11 +32,11 @@ namespace BotData.Api.Controllers
         }
 
         [HttpGet("{discordId:long}")]
-        public async Task<ActionResult<User>> GetById(int projectId)
+        public async Task<ActionResult<User>> GetById(int discordId)
         {
             var user = await _context
                 .Users
-                .FirstOrDefaultAsync(x => x.Id == projectId);
+                .FirstOrDefaultAsync(x => x.DiscordId == projectId);
 
             if (user == null)
                 return NotFound();
@@ -44,7 +44,7 @@ namespace BotData.Api.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{projectName}")]
+        [HttpGet("{userName}")]
         public async Task<ActionResult<User>> GetByName(string userName)
         {
             var user = await _context
