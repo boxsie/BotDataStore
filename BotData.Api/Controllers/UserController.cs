@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BotData.Data;
+using BotData.Data.Context;
 using BotData.Data.Entity.User;
 using BotData.Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 
 namespace BotData.Api.Controllers
@@ -96,17 +95,6 @@ namespace BotData.Api.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(user);
-        }
-    }
-
-    public class ValidateModelAttribute : ActionFilterAttribute
-    {
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            if (!context.ModelState.IsValid)
-            {
-                context.Result = new BadRequestObjectResult(context.ModelState);
-            }
         }
     }
 }

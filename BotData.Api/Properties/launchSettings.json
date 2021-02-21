@@ -22,11 +22,11 @@
       "launchBrowser": true,
       "launchUrl": "api/user",
       "environmentVariables": {
-        "DB_USER": "jeffbot",
+        "DB_USER": "postgresadmin",
         "DB_URL": "localhost",
-        "DB_NAME": "discord",
-        "DB_PORT": "3306",
-        "DB_PASS": "rlkwrymjgVe0aY6iqf",
+        "DB_NAME": "postgresdb",
+        "DB_PORT": "5432",
+        "DB_PASS": "H0m3r13*",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:5000"

@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "BotData.GeoSniffLoader": {
+      "commandName": "Project",
+      "commandLineArgs": "-c D:\\Dev\\alfdoitch\\discord\\geo_sniff\\city_data.csv -l D:\\Dev\\alfdoitch\\discord\\geo_sniff\\loc_data.csv",
+      "environmentVariables": {
+        "DB_USER": "postgresadmin",
+        "DB_URL": "localhost",
+        "DB_NAME": "postgresdb",
+        "DB_PORT": "5432",
+        "DB_PASS": "H0m3r13*"
+      }
+    }
+  }
+}
