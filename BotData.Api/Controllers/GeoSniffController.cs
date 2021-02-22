@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BotData.Data.Context;
+using BotData.Data.Entity.BotUser;
+using BotData.Data.Entity.Game;
 using BotData.Data.Entity.GeoSniff;
-using BotData.Data.Entity.User;
+using BotData.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,6 +51,78 @@ namespace BotData.Api.Controllers
                 return NotFound();
 
             return Ok(await GetRandomLocation(country));
+        }
+
+        [HttpPost]
+        [ValidateModel]
+        public async Task<ActionResult<User>> PostNewGame(GuessGameModel model)
+        {
+            var user = await GetUser(model.DiscordId);
+
+            if (user == null)
+                return BadRequest("User does not exist");
+
+            var game = new GuessGame
+            {
+                User = user,
+                GameName = model.GameName,
+                CorrectAnswer = model.CorrectAnswer,
+                StartedOn = DateTime.Now
+            };
+
+            await _context.GuessGames.AddAsync(game);
+            await _context.SaveChangesAsync();
+
+            return Ok(game.Id);
+        }
+
+        [HttpPut("{gameId:int}")]
+        public async Task<ActionResult<User>> FinishGame(int gameId)
+        {
+            var game = await _context
+                .GuessGames
+                .FirstOrDefaultAsync(x => x.Id == gameId);
+
+            if (game == null)
+                return BadRequest("Game does not exist");
+
+            game.FinishedOn = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("guess")]
+        [ValidateModel]
+        public async Task<ActionResult<User>> PostAttempt(GuessGameAttemptModel model)
+        {
+            var game = await _context
+                .GuessGames
+                .Include(x => x.Attempts)
+                .FirstOrDefaultAsync(x => x.Id == model.GameId);
+
+            if (game == null)
+                return BadRequest("Game does not exist");
+
+            var user = await GetUser(model.DiscordId);
+
+            if (user == null)
+                return BadRequest("User does not exist");
+
+            var attempt = new GuessGameAttempt
+            {
+                Attempt = model.Attempt,
+                Game = game,
+                User = user,
+                CreatedOn = DateTime.Now
+            };
+
+            game.Attempts.Add(attempt);
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
         private async Task<Location> GetRandomLocation(string countryName = null)
@@ -103,6 +177,13 @@ namespace BotData.Api.Controllers
             return _context.GeoLocations
                 .Where(x => x.Country.ToLower() == country.ToLower())
                 .CountAsync();
+        }
+
+        private Task<User> GetUser(long discordId)
+        {
+            return _context
+                .Users
+                .FirstOrDefaultAsync(x => x.DiscordId == discordId);
         }
     }
 }

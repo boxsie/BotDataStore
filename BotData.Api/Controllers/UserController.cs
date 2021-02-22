@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using BotData.Data;
 using BotData.Data.Context;
-using BotData.Data.Entity.User;
+using BotData.Data.Entity.BotUser;
 using BotData.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

@@ -3,15 +3,17 @@ using System;
 using BotData.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BotData.Data.Migrations
 {
     [DbContext(typeof(BotDataContext))]
-    partial class BotDataContextModelSnapshot : ModelSnapshot
+    [Migration("20210222152543_AddGame")]
+    partial class AddGame
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,11 @@ namespace BotData.Data.Migrations
 
             modelBuilder.Entity("BotData.Data.Entity.BotUser.User", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
                     b.Property<long>("DiscordId")
                         .HasColumnType("bigint");
 
@@ -31,7 +38,9 @@ namespace BotData.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("DiscordId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiscordId");
 
                     b.HasIndex("Name");
 
@@ -49,9 +58,6 @@ namespace BotData.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long>("DiscordId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("FinishedOn")
                         .HasColumnType("timestamp without time zone");
 
@@ -62,9 +68,12 @@ namespace BotData.Data.Migrations
                     b.Property<DateTime>("StartedOn")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("DiscordId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("GuessGame");
                 });
@@ -83,17 +92,17 @@ namespace BotData.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<long>("DiscordId")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("GameId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DiscordId");
-
                     b.HasIndex("GameId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("GuessGameAttempt");
                 });
@@ -132,7 +141,7 @@ namespace BotData.Data.Migrations
                 {
                     b.HasOne("BotData.Data.Entity.BotUser.User", "User")
                         .WithMany("GuessGames")
-                        .HasForeignKey("DiscordId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -141,15 +150,15 @@ namespace BotData.Data.Migrations
 
             modelBuilder.Entity("BotData.Data.Entity.Game.GuessGameAttempt", b =>
                 {
-                    b.HasOne("BotData.Data.Entity.BotUser.User", "User")
-                        .WithMany("GuessGameAttempts")
-                        .HasForeignKey("DiscordId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BotData.Data.Entity.Game.GuessGame", "Game")
                         .WithMany("Attempts")
                         .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BotData.Data.Entity.BotUser.User", "User")
+                        .WithMany("GuessGameAttempts")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
