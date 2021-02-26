@@ -157,7 +157,8 @@ namespace BotData.Api.Controllers
                 Attempt = model.Attempt,
                 Game = game,
                 User = user,
-                CreatedOn = DateTime.Now
+                CreatedOn = DateTime.Now,
+                Correct = model.Correct
             };
 
             game.Attempts.Add(attempt);

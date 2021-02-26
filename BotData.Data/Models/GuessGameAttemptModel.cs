@@ -12,5 +12,8 @@ namespace BotData.Data.Models
 
         [Required]
         public string Attempt { get; set; }
+
+        [Required]
+        public bool Correct { get; set; }
     }
 }
