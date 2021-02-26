@@ -9,6 +9,7 @@ namespace BotData.Data.Context
     {
         public DbSet<User> Users { get; set; }
         public DbSet<GuessGame> GuessGames { get; set; }
+        public DbSet<GuessGameAttempt> GuessGameAttempts { get; set; }
         public DbSet<Location> GeoLocations { get; set; }
 
         public BotDataContext(DbContextOptions<BotDataContext> options) : base(options)

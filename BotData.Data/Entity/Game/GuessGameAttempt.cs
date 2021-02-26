@@ -8,6 +8,7 @@ using BotData.Data.Entity.BotUser;
 
 namespace BotData.Data.Entity.Game
 {
+    [Table("GuessGameAttempt")]
     public class GuessGameAttempt
     {
         [Key]
@@ -25,6 +26,9 @@ namespace BotData.Data.Entity.Game
 
         [Required]
         public DateTime CreatedOn { get; set; }
+
+        [Required]
+        public bool Correct { get; set; }
 
         public GuessGame Game { get; set; }
         public User User { get; set; }

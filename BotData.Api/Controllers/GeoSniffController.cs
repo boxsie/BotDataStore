@@ -12,6 +12,48 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BotData.Api.Controllers
 {
+    [Route("api/geoscore")]
+    [ApiController]
+    public class GeoSniffScoresController : ControllerBase
+    {
+        private readonly BotDataContext _context;
+
+        public GeoSniffScoresController(BotDataContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet("leaderboard")]
+        public async Task<ActionResult<List<GeoSniffLbEntryViewModel>>> GetLeaderboard()
+        {
+            var attempts = await _context
+                .GuessGameAttempts
+                    .Include(x => x.User)
+                .ToListAsync();                
+
+            var leaderboard = new List<GeoSniffLbEntryViewModel>();
+
+            foreach (var att in attempts.GroupBy(x => new { x.DiscordId, x.User.Name }))
+            {
+                var played = att.Select(y => y.GameId).Distinct().Count();
+                var won = att.Where(y => y.Correct).Count();
+
+                leaderboard.Add(new GeoSniffLbEntryViewModel
+                {
+                    DiscordId = att.Key.DiscordId,
+                    Name = att.Key.Name,
+                    Played = played,
+                    GuessPerGame = att.Count() / played,
+                    Won = won,
+                    WinRate = won > 0 ? (float)won / played : 0,
+                    Accuracy = won > 0 ? (float)won / att.Count() : 0
+                });
+            }
+           
+            return Ok(leaderboard);
+        }
+    }
+
     [Route("api/geo")]
     [ApiController]
     public class GeoSniffController : ControllerBase
