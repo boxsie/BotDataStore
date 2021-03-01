@@ -29,7 +29,7 @@ namespace BotData.Api.Controllers
             var attempts = await _context
                 .GuessGameAttempts
                     .Include(x => x.User)
-                .ToListAsync();                
+                .ToListAsync();
 
             var leaderboard = new List<GeoSniffLbEntryViewModel>();
 
@@ -49,7 +49,7 @@ namespace BotData.Api.Controllers
                     Accuracy = won > 0 ? (float)won / att.Count() : 0
                 });
             }
-           
+
             return Ok(leaderboard);
         }
     }
