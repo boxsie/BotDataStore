@@ -11,71 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BotData.Api.Controllers
-{
-    [Route("api/geoscore")]
-    [ApiController]
-    public class GeoSniffScoresController : ControllerBase
-    {
-        private readonly BotDataContext _context;
-
-        private const int MaxScore = 20;
-        private const int MinScore = 5;
-        private const int IncorrectPenalty = 5;
-
-        public GeoSniffScoresController(BotDataContext context)
-        {
-            _context = context;
-        }
-
-        [HttpGet("leaderboard")]
-        public async Task<ActionResult<List<GeoSniffLbEntryViewModel>>> GetLeaderboard()
-        {
-            var attempts = await _context
-                .GuessGameAttempts
-                    .Include(x => x.User)
-                .ToListAsync();
-
-            var leaderboard = new List<GeoSniffLbEntryViewModel>();
-
-            foreach (var att in attempts.GroupBy(x => new { x.DiscordId, x.User.Name }))
-            {
-                var played = att.Select(y => y.GameId).Distinct().Count();
-                var won = att.Where(y => y.Correct).Count();
-
-                var winningGames = att
-                    .Where(x => x.Correct)
-                    .GroupBy(x => x.GameId);
-
-                var total = winningGames.Select(x => {
-                    var score = MaxScore - (x.Count() * IncorrectPenalty);
-
-                    if (score < MinScore)
-                        score = MinScore;
-
-                    return score;
-                }).Sum();
-
-                leaderboard.Add(new GeoSniffLbEntryViewModel
-                {
-                    DiscordId = att.Key.DiscordId,
-                    Name = att.Key.Name,
-                    Played = played,
-                    Won = won,
-                    Score = total
-                });
-            }
-
-            return Ok(leaderboard);
-        }
-    }
-
+{    
     [Route("api/geo")]
     [ApiController]
     public class GeoSniffController : ControllerBase
     {
         private readonly BotDataContext _context;
 
-        private const int MinimumCountryLocations = 100;
+        private const int MinimumCountryLocations = 75;
 
         public GeoSniffController(BotDataContext context)
         {
