@@ -10,8 +10,6 @@ namespace BotData.Data.Models
         public string Name { get; set; }
         public int Played { get; set; }
         public int Won { get; set; }
-        public float GuessPerGame { get; set; }
-        public float WinRate { get; set; }
-        public float Accuracy { get; set; }
+        public int Score { get; set; }
     }
 }

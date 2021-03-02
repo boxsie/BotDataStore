@@ -18,6 +18,10 @@ namespace BotData.Api.Controllers
     {
         private readonly BotDataContext _context;
 
+        private const int MaxScore = 20;
+        private const int MinScore = 5;
+        private const int IncorrectPenalty = 5;
+
         public GeoSniffScoresController(BotDataContext context)
         {
             _context = context;
@@ -38,15 +42,26 @@ namespace BotData.Api.Controllers
                 var played = att.Select(y => y.GameId).Distinct().Count();
                 var won = att.Where(y => y.Correct).Count();
 
+                var winningGames = att
+                    .Where(x => x.Correct)
+                    .GroupBy(x => x.GameId);
+
+                var total = winningGames.Select(x => {
+                    var score = MaxScore - (x.Count() * IncorrectPenalty);
+
+                    if (score < MinScore)
+                        score = MinScore;
+
+                    return score;
+                }).Sum();
+
                 leaderboard.Add(new GeoSniffLbEntryViewModel
                 {
                     DiscordId = att.Key.DiscordId,
                     Name = att.Key.Name,
                     Played = played,
-                    GuessPerGame = att.Count() / played,
                     Won = won,
-                    WinRate = won > 0 ? (float)won / played : 0,
-                    Accuracy = won > 0 ? (float)won / att.Count() : 0
+                    Score = total
                 });
             }
 
